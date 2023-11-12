@@ -14,6 +14,20 @@ const inboxRouter = require('./router/inboxRouter');
 
 const app = express();
 dotenv.config();
+
+// Connect to MongoDB
+mongoose.connect('mongodb://127.0.0.1:27017/chat_application', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+// Check MongoDB connection
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+
 // process.end.APP_CHAT;
 
 // mongoose.
@@ -32,6 +46,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.set('view engine','ejs');
+// app.set('views', path.join(__dirname, 'views'));
 app.use(cookieParser(process.env.SECRET_COOKIE));
 
 //router setup
@@ -41,8 +56,13 @@ app.use(inboxRouter);
 
 
 //error handling
-app.use(notFoundHandler);   //404 not found handler
-app.use(defaultErrorHandler)  //common error handler
+// app.use(notFoundHandler);   //404 not found handler
+// app.use(defaultErrorHandler)  //common error handler
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
 
 
 app.listen(process.env.PORT,()=>{
