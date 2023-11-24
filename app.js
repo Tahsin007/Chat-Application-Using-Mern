@@ -3,17 +3,28 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const moment = require('moment');
+const cors = require('cors');
 
 //import inside file
 const {notFoundHandler,defaultErrorHandler} = require('./middlewares/common/errorHandler');
 const loginRouter = require('./router/loginRouter');
 const userRouter = require('./router/userRouter');
 const inboxRouter = require('./router/inboxRouter');
+const { Http2ServerRequest } = require('http2');
 
-
+var http = require('http'); 
 
 const app = express();
+// const server = http.createServer(app);
+var server = require('http').createServer(app); 
 dotenv.config();
+app.use(cors());
+
+const io = require('socket.io')(server);
+global.io =io;
+
+app.locals.moment = moment;
 
 // Connect to MongoDB
 mongoose.connect('mongodb://127.0.0.1:27017/chat_application', {
@@ -28,15 +39,6 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
-// process.end.APP_CHAT;
-
-// mongoose.
-//     connect(process.env.CONN_STRING,{
-//         useNewUrlParser:true,
-//         useUnifiedTopology:true
-//     })
-//     .then(()=>{console.log("Database Connection is successfull")})
-//     .catch((err)=>{console.log(err)});
 
 //Request parser
 app.use(express.json());
@@ -59,11 +61,14 @@ app.use(inboxRouter);
 // app.use(notFoundHandler);   //404 not found handler
 // app.use(defaultErrorHandler)  //common error handler
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something went wrong!');
-});
-
+// app.use((err, req, res, next) => {
+//   console.error(err.stack);
+//   res.status(500).send('Something went wrong!');
+// });
+// io.on('connection', (socket) => {
+//   console.log('A user connected');
+//   // Your Socket.IO event handlers go here
+// });
 
 app.listen(process.env.PORT,()=>{
     console.log(`Listening to the ${process.env.PORT} port`);

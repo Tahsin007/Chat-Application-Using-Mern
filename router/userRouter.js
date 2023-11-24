@@ -6,12 +6,12 @@ const {addUserValidators,addUserValidationHandler} = require('../middlewares/use
 const {getUsers,addUser,removeUser} = require('../controller/userController');
 const avatarUploads = require('../middlewares/userMiddleware/avatarUploads');
 const decortaeHtmlResponse = require('../middlewares/common/decorateHtmlResponse')
-const {checkLogin} = require('../middlewares/common/checkLogin');
+const {checkLogin,requireRole} = require('../middlewares/common/checkLogin');
 
 
 
 
-router.get('/users',decortaeHtmlResponse("Users"),checkLogin,getUsers);
+router.get('/users',decortaeHtmlResponse("Users"),checkLogin,requireRole("Admin"),getUsers);
 router.delete('/users/:id',removeUser);
 router.post('/users',avatarUploads,addUserValidators,addUserValidationHandler,addUser);
 

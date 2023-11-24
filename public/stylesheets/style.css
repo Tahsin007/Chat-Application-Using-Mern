@@ -12,8 +12,8 @@
   --secondary: #11141f;
   --tertiary: #1f222e;
   --dark: #0e0e12;
-  --green: #52d794;
-  --blue: #00b3bd;
+  --green: #6D72E0;
+  --blue: #6CBAA2;
   --light: #fff;
   --red: indianred;
 }
@@ -503,7 +503,7 @@ input[type="submit"]:active {
 #left-column {
   grid-area: left-column;
   background-color: var(--tertiary);
-  background-image: url("../images/illustration.png");
+  background-image: url("../images/Chat Logo.png");
   background-size: 68%;
   background-position: center;
   background-repeat: no-repeat;

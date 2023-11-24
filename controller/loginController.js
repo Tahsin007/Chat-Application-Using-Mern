@@ -25,6 +25,7 @@ async function login(req,res,next){
                     username:user.name,
                     mobile: user.mobile,
                     email:user.email,
+                    userid:user._id,
                     role:user,
                 };
                 const token = jwt.sign(userObject,process.env.JWT_SECRET,{
@@ -38,7 +39,8 @@ async function login(req,res,next){
                 });
 
                 res.locals.loggedInUser = userObject;
-                res.render("inbox");
+                // res.render("inbox");
+                res.redirect("inbox");
             }else{
                 throw createError("Login Failed, Please Try again Later");
             }  
